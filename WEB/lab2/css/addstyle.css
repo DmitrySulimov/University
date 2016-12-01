@@ -1,0 +1,81 @@
+body{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	color: #868585;
+	background-color: #fdfcfb;
+}
+img{
+	max-width:100%;
+	height: auto;
+}
+header{
+	margin: 50px 0 80px;
+}
+.menu{
+	background: #fefefe;
+	border: 0;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .19);
+	padding: 15px 0;
+}
+.navbar-brand{
+	padding-right: 60px;
+}
+.navbar-brand img{
+	position: relative;
+	top: -60px;
+}
+.navbar-nav > li > a{
+	margin-right: -15px;
+	color: #8d8c8c;
+	font-size: 18px;
+	text-transform: uppercase;
+}
+.navbar-nav > li > a:hover{
+	border-bottom: 1px solid #d42819;
+	color: #8d8c8c;
+}
+.slogan{
+	margin-bottom: 80px;
+}
+.slogan > h1{
+	margin: 0;
+	text-align: center;
+	font-size: 33px;
+	color: #7e7e7e;
+}
+.slogan > h1 > span{
+	color: #d42819
+}
+.card-row{
+	margin-bottom: 50px;
+	text-align: center;
+}
+
+.card-row  img{
+	box-shadow: 0 0 5px rgba(0, 0, 0, .19);
+}	
+.card-row a:hover  img{
+	transition: all .5s;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .70);
+}	
+.nav-pager{
+	text-align: center;
+}
+ul.unstyled{
+	list-style: none;
+	padding: 0;
+}
+.copyright > h6{
+	text-align: center;
+	margin: 10px;
+}
+.photos {
+	margin-bottom: 50px;
+
+}
+footer{
+	background: #333;
+	color: #eee;
+	font-size: 11px;
+	padding: 20px;
+}

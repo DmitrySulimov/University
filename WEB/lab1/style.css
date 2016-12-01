@@ -1,0 +1,73 @@
+body {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 16pt;
+		color: #000000;
+	background-image: url(images/met.jpg);
+	background-repeat: repeat;
+}
+#container{
+	width:1200px;
+}
+.header{
+	width: 1200px; 
+    padding: 10px;
+    margin: auto; 
+	text-align: center
+}
+.photo_list{
+	width:1200px;
+	display: inline-block;
+}
+.list{
+	width:600px;
+	padding: 5 0;
+}
+.list_marc{
+	list-style-type:none;
+}
+.photo{
+	
+	width:600px;
+	position: absolute;	
+	text-align: center;
+    top: 135px;
+    left: 600px;
+}
+.img {
+    height: 230px;
+    width: 222px;
+    margin: 0 0 0 0;
+}
+.table_table{
+	display: inline-table;
+	width: 1200;
+}
+.study_table{
+	border-collapse: collapse;
+	width: 600;
+	
+}
+.work_table{
+	width: 600;
+	border-collapse: collapse;
+	padding: 10 0;
+}
+table { 
+    width: 100%;
+    border: 4px double black; 
+    border-collapse: collapse; 
+   }
+th { 
+    text-align: left; 
+   }
+td { 
+    padding: 5px; 
+    border: 1px solid black; 
+
+}
+.footer{
+	width: 1200px; 
+	text-align: center;
+	padding: 10px;
+	margin: auto ;
+}
