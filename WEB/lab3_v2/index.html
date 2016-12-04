@@ -1,12 +1,45 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-	<title>Graphic</title>
-	<meta charset="utf-8"/>
-	
-	</head>
-	<body>
-		<script src="js/paint.js"></script>
-		<script>createPaint(document.body);</script>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="workfiled-wrapper">
+          <canvas id="workfield" width="1200" height="600"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tools-panel"> 
+        <div class="tools">
+            <input type="radio" title="Pencil" name="tool" value="pencil" checked>
+			<p><strong>Pencil</strong></p>
+			 <input type="radio" title="Spray" name="tool" value="eraser">
+			<p><strong>Spray</strong></p>
+            <input type="radio" title="Line" name="tool" value="line">
+			<p><strong>Line</strong></p>
+            <input type="radio" title="Rectangle" name="tool" value="rectangle">
+			<p><strong>Rectangle</strong></p>
+            <input type="radio" title="Circle" name="tool" value="circle">
+			<p><strong>Circle</strong></p>
+            <input type="radio" title="Eraser" name="tool" value="eraser">
+			<p><strong>Eraser</strong></p>
+            <input type="color" title="Stroke color" id="stroke-color">
+            <input type="number" title="Thickness" id="tool-thickness" min="1" max="99" value="1">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="js/paint.js"></script>
+</body>
 </html>

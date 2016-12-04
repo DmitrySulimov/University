@@ -1,0 +1,54 @@
+*{
+  font: 18px Arial, sans-serif;
+}
+body{
+
+	background-color: Lavender!important
+}
+.wrapper{
+  margin-top: 15px;
+}
+
+#workfield{
+  display: block;
+  margin: auto;
+  cursor: default;
+  border: 1px solid #000;
+  background-color: white;
+}
+
+.tools{
+  position: relative;
+  margin-left: auto;
+  padding-left: 40px;
+  margin-top: 10px;
+  margin-right: auto;
+  display: block;
+
+}
+.tools > p{
+  float: left;
+  margin-top: 10px;
+  margin-right: 15px;
+  margin-left: 10px;
+  display: block;
+  height: 40px;
+  width: 80px;
+  cursor: pointer;
+}
+
+.tools input,
+.tools input[type="radio"]{
+  float: left;
+  margin-top: 0px;
+  margin-right: 15px;
+  margin-left: 15px;
+  display: block;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+
+}
+.tools input:last-child{
+  margin-right: 0;
+}

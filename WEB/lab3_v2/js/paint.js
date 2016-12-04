@@ -1,259 +1,205 @@
-function elt(name, attributes) {
-  var node = document.createElement(name);
-  if (attributes) {
-    for (var attr in attributes)
-      if (attributes.hasOwnProperty(attr))
-        node.setAttribute(attr, attributes[attr]);
-  }
-  for (var i = 2; i < arguments.length; i++) {
-    var child = arguments[i];
-    if (typeof child == "string")
-      child = document.createTextNode(child);
-    node.appendChild(child);
-  }
-  return node;
+function Brush(context){
+  this.context = context;
+  this.radius = 0;
+  this.width = 0;
+  this.height = 0;
+  this.fillColor = "#000";
+  this.x  = undefined;
+  this.y = undefined;
+  this.painting = false;
+  this.selectedTool = 'pencil';
 }
 
-var controls = Object.create(null);
+Brush.prototype = {
+  drawRect: function(movedX, movedY){
+    this.context.fillStyle = this.fillColor;
+    this.context.lineWidth = this.radius;
 
-function createPaint(parent) {
-  var canvas = elt("canvas", {width: 1254, height: 580});
-  var cx = canvas.getContext("2d");
-  var toolbar = elt("div", {class: "toolbar"});
-  for (var name in controls)
-    toolbar.appendChild(controls[name](cx));
+    this.width = movedX - this.x;
+    this.height = movedY - this.y;
+    this.context.rect(this.x, this.y, this.width, this.height);
+  },
+  drawCircle: function(movedX, movedY){
+    this.context.fillStyle = this.fillColor;
+    this.context.lineWidth = this.radius;
 
-  var panel = elt("div", {class: "picturepanel"}, canvas);
-  parent.appendChild(elt("div", null, panel, toolbar));
+    this.width = Math.abs(movedX - this.x);
+    this.height = Math.abs(movedY - this.y);
+    this.context.ellipse(this.x, this.y, this.width, this.height, 2 * Math.PI, 0, 8);
+  },
+  drawPencil: function(newX, newY){
+    this.context.fillStyle = this.fillColor;
+    this.context.lineWidth = this.radius;
+    this.context.lineCap = 'round';
+
+    this.context.beginPath();
+    this.context.moveTo(this.x, this.y);
+    this.context.lineTo(newX, newY);
+    this.context.fill();
+
+    this.x = newX;
+    this.y = newY;
+  },
+    drawSpray: function(newX, newY){
+	this.context.strokeStyle = this.fillColor;
+    this.context.lineWidth = this.radius;
+	
+    this.context.beginPath();
+    this.context.moveTo(this.x, this.y);
+	this.context.arc(
+                        newX + Math.cos( Math.random() * Math.PI * 2 ) * radius * Math.random(),
+                        newY + Math.sin( Math.random() * Math.PI * 2 ) * radius * Math.random(),
+                        1,
+                        0, Math.PI * 2, false
+                    );
+    context.stroke();
+
+    this.x = newX;
+    this.y = newY;
+  },
+  drawLine: function(endX, endY){
+    this.context.fillStyle = this.fillColor;
+    this.context.lineWidth = this.radius;
+    this.context.lineCap = 'round';
+
+    this.context.moveTo(this.x, this.y);
+    this.context.lineTo(endX, endY);
+  },
+  erase: function(newX, newY){
+    this.context.lineWidth = this.radius;
+    this.context.globalCompositeOperation="destination-out";
+    this.context.beginPath();
+    this.context.moveTo(this.x, this.y);
+    this.context.lineTo(newX, newY);
+    this.context.fill();
+
+    this.x = newX;
+    this.y = newY;
+  },
+  startDrawing: function(newX, newY){
+    this.context.globalCompositeOperation="source-over";
+    this.context.beginPath();
+    this.x = newX;
+    this.y = newY;
+    this.width = 0;
+    this.height = 0;
+    this.painting = true;
+  },
+  stopDrawing: function(){
+    this.context.fill();
+    this.painting = false;
+    this.x = undefined;
+    this.y = undefined;
+    this.width = 0;
+    this.height = 0;
+  }
 }
 
+function Painter(canvas){
+  var context = canvas.getContext('2d');
+  var imgData;
 
-var tools = Object.create(null);
+  var brush = new Brush(context);
+  brush.radius = 1;
+  brush.color = "#000";
 
-controls.tool = function(cx) {
-  var select = elt("select");
-  for (var name in tools)
-    select.appendChild(elt("option", null, name));
+  var cancel = function(e){
+    e.preventDefault();
+    return false;
+  }
 
-  cx.canvas.addEventListener("mousedown", function(event) {
-    if (event.which == 1) {
-      tools[select.value](event, cx);
-      event.preventDefault();
+  this.upListener = function(e){
+    if(brush.painting){
+      var x = e.offsetX;
+      var y = e.offsetY;
     }
-  });
-    return elt("span", null, "Tool: ", select);
-};
-
-function relativePos(event, element) {
-  var rect = element.getBoundingClientRect();
-  return {x: Math.floor(event.clientX - rect.left),
-          y: Math.floor(event.clientY - rect.top)};
-}
-
-function trackDrag(onMove, onEnd) {
-  function end(event) {
-    removeEventListener("mousemove", onMove);
-    removeEventListener("mouseup", end);
-    if (onEnd)
-      onEnd(event);
+    brush.stopDrawing();
+    imgData = context.getImageData(0, 0, canvas.width, canvas.height);
   }
-  addEventListener("mousemove", onMove);
-  addEventListener("mouseup", end);
-}
 
-tools.Pan = function(event, cx, onEnd) {
-  cx.lineCap = "round";
+  this.downListener = function(e){
+    var x = e.offsetX;
+    var y = e.offsetY;
+    imgData = undefined;
+    brush.startDrawing(x, y);
+    this.draw(e);
+  }.bind(this);
 
-  var pos = relativePos(event, cx.canvas);
-  trackDrag(function(event) {
-    cx.beginPath();
-    cx.moveTo(pos.x, pos.y);
-    pos = relativePos(event, cx.canvas);
-    cx.lineTo(pos.x, pos.y);
-    cx.stroke();
-  }, onEnd);
-};
+  this.moveListener = function(e){
+    this.draw(e);
+  }.bind(this);
 
-tools.Erase = function(event, cx) {
-  cx.globalCompositeOperation = "destination-out";
-  tools.Pan(event, cx, function() {
-    cx.globalCompositeOperation = "source-over";
-  });
-};
+  this.draw = function(e){
+    var x = e.offsetX;
+    var y = e.offsetY;
 
-controls.color = function(cx) {
-  var input = elt("input", {type: "color"});
-  input.addEventListener("change", function() {
-    cx.fillStyle = input.value;
-    cx.strokeStyle = input.value;
-  });
-  return elt("span", null, "Color: ", input);
-};
-
-controls.brushSize = function(cx) {
-  var select = elt("select");
-  var sizes = [1, 2, 3, 5, 8, 12, 25, 35, 50, 75, 100];
-  sizes.forEach(function(size) {
-    select.appendChild(elt("option", {value: size},
-                           size + " pixels"));
-  });
-  select.addEventListener("change", function() {
-    cx.lineWidth = select.value;
-  });
-  return elt("span", null, "Brush size: ", select);
-};
-
-
-controls.save = function(cx) {
-  var link = elt("a", {href: "/"}, "Save");
-  function update() {
-    try {
-      link.href = cx.canvas.toDataURL();
-    } catch (e) {
-      if (e instanceof SecurityError)
-        link.href = "javascript:alert(" +
-          JSON.stringify("Can't save: " + e.toString()) + ")";
-      else
-        throw e;
+    context.beginPath();
+    if(brush.painting){
+      switch(brush.selectedTool){
+        case 'pencil':{
+          brush.drawPencil(x, y);
+          break;
+        }
+		 case 'spray':{
+          if(imgData!= undefined) context.putImageData(imgData, 0, 0);
+          brush.drawSpray(x, y);
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          break;
+        }
+        case 'line':{
+          if(imgData!= undefined) context.putImageData(imgData, 0, 0);
+          brush.drawLine(x, y);
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          break;
+        }
+        case 'rectangle':{
+          if(imgData!= undefined) context.putImageData(imgData, 0, 0);
+          brush.drawRect(x, y);
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          break;
+        }
+        case 'circle':{
+          if(imgData!= undefined) context.putImageData(imgData, 0, 0);
+          brush.drawCircle(x, y);
+          imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          break;
+        }
+        case 'eraser':{
+          brush.erase(x, y);
+          break;
+        }
+        default:
+        break;
+      }
     }
-  }
-  link.addEventListener("mouseover", update);
-  link.addEventListener("focus", update);
-  return link;
-};
-
-function loadImageURL(cx, url) {
-  var image = document.createElement("img");
-  image.addEventListener("load", function() {
-    var color = cx.fillStyle, size = cx.lineWidth;
-    cx.canvas.width = image.width;
-    cx.canvas.height = image.height;
-    cx.drawImage(image, 0, 0);
-    cx.fillStyle = color;
-    cx.strokeStyle = color;
-    cx.lineWidth = size;
-  });
-  image.src = url;
-}
-
-controls.openFile = function(cx) {
-  var input = elt("input", {type: "file"});
-  input.addEventListener("change", function() {
-    if (input.files.length == 0) return;
-    var reader = new FileReader();
-    reader.addEventListener("load", function() {
-      loadImageURL(cx, reader.result);
-    });
-    reader.readAsDataURL(input.files[0]);
-  });
-  return elt("div", null, "Open file: ", input);
-};
-
-controls.openURL = function(cx) {
-  var input = elt("input", {type: "text"});
-  var form = elt("form", null,
-                 "Open URL: ", input,
-                 elt("button", {type: "submit"}, "load"));
-  form.addEventListener("submit", function(event) {
-    event.preventDefault();
-    loadImageURL(cx, form.querySelector("input").value);
-  });
-  return form;
-};
-
-tools.Spray = function(event, cx) {
-  var radius = cx.lineWidth / 2;
-  var area = radius * radius * Math.PI;
-  var dotsPerTick = Math.ceil(area / 30);
-
-  var currentPos = relativePos(event, cx.canvas);
-  var spray = setInterval(function() {
-    for (var i = 0; i < dotsPerTick; i++) {
-      var offset = randomPointInRadius(radius);
-      cx.fillRect(currentPos.x + offset.x,
-                  currentPos.y + offset.y, 1, 1);
-    }
-  }, 25);
-  trackDrag(function(event) {
-    currentPos = relativePos(event, cx.canvas);
-  }, function() {
-    clearInterval(spray);
-  });
-};
-
-
-
-function randomPointInRadius(radius) {
-  for (;;) {
-    var x = Math.random() * 2 - 1;
-    var y = Math.random() * 2 - 1;
-    if (x * x + y * y <= 1)
-      return {x: x * radius, y: y * radius};
-  }
-}
-
-  function rectangleFrom(a, b) {
-    return {left: Math.min(a.x, b.x),
-            top: Math.min(a.y, b.y),
-            width: Math.abs(a.x - b.x),
-            height: Math.abs(a.y - b.y)};
+    context.stroke();
   }
 
+  canvas.addEventListener('mousedown', this.downListener);
+  document.addEventListener('mouseup', this.upListener);
+  canvas.addEventListener('mousemove', this.moveListener);
+  canvas.addEventListener('contextmenu', this.cancel);
+  canvas.addEventListener('selectstart', this.cancel);
 
-tools.Rectangle = function(event, cx) {
-    var relativeStart = relativePos(event, cx.canvas);
-    var pageStart = {x: event.pageX, y: event.pageY};
-
-    var trackingNode = document.createElement("div");
-    trackingNode.style.position = "absolute";
-    trackingNode.style.background = cx.fillStyle;
-    document.body.appendChild(trackingNode);
-
-    trackDrag(function(event) {
-      var rect = rectangleFrom(pageStart,
-                               {x: event.pageX, y: event.pageY});
-      trackingNode.style.left = rect.left + "px";
-      trackingNode.style.top = rect.top + "px";
-      trackingNode.style.width = rect.width + "px";
-      trackingNode.style.height = rect.height + "px";
-    }, function(event) {
-      var rect = rectangleFrom(relativeStart,
-                               relativePos(event, cx.canvas));
-			cx.fillRect(rect.left, rect.top, rect.width, rect.height);
-      document.body.removeChild(trackingNode);
-    });
+  var fillColorInput = document.getElementById('stroke-color');
+  fillColorInput.onchange = function(e){
+    brush.fillColor = fillColorInput.value;
   };
 
-  
-function trackStep(LineTo, onEnd) {
-  function end(event) {
-	  
-    removeEventListener("mouseup",  function(event){
-	  var dest = relativePos(event, cx.canvas);
-	  return (dest.x, dest.y);
-  })
-    if (onEnd)
-      onEnd(event);
+  var thicknessInput = document.getElementById('tool-thickness');
+  thicknessInput.onchange = function(e){
+    brush.radius = thicknessInput.value;
   }
 
-
-  addEventListener("mouseup", function(event){
-	  var dest = relativePos(event, cx.canvas);
-	  return (dest.x, dest.y);
+  var tools = document.getElementsByName('tool');
+  for(var i = 0; i < tools.length; i++){
+    tools[i].onchange = function(e){
+      console.log(e.srcElement.value);
+      brush.selectedTool = e.srcElement.value;
+    }
   }
-  );
+}
 
-tools.Line = function(event, cx, onEnd) {
-  cx.lineCap = "round";
-
-  var pos = relativePos(event, cx.canvas);
-  trackStep(function(event) {
-    cx.beginPath();
-    cx.moveTo(pos.x, pos.y);
-    pos = relativePos(event, cx.canvas);
-    cx.lineTo(dest.x, dest.y);
-    cx.stroke();
-  }, onEnd);
-};
-
-  
+window.onload = function(){
+  new Painter(document.getElementById('workfield'));
+}
