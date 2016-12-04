@@ -3,7 +3,7 @@ function Brush(context){
   this.radius = 0;
   this.width = 0;
   this.height = 0;
-  this.fillColor = "#000";
+  this.fillColor = 'black';
   this.x  = undefined;
   this.y = undefined;
   this.painting = false;
@@ -13,7 +13,7 @@ function Brush(context){
 Brush.prototype = {
   drawRect: function(movedX, movedY){
     this.context.fillStyle = this.fillColor;
-    this.context.lineWidth = this.radius;
+    this.context.lineWidth = 1;
 
     this.width = movedX - this.x;
     this.height = movedY - this.y;
@@ -21,49 +21,51 @@ Brush.prototype = {
   },
   drawCircle: function(movedX, movedY){
     this.context.fillStyle = this.fillColor;
-    this.context.lineWidth = this.radius;
+    this.context.lineWidth = 1;
 
     this.width = Math.abs(movedX - this.x);
     this.height = Math.abs(movedY - this.y);
     this.context.ellipse(this.x, this.y, this.width, this.height, 2 * Math.PI, 0, 8);
   },
   drawPencil: function(newX, newY){
-    this.context.fillStyle = this.fillColor;
+    this.context.strokeStyle = this.fillColor;
     this.context.lineWidth = this.radius;
     this.context.lineCap = 'round';
 
     this.context.beginPath();
     this.context.moveTo(this.x, this.y);
     this.context.lineTo(newX, newY);
-    this.context.fill();
+
 
     this.x = newX;
-    this.y = newY;
+    this.y = newY; 
+	this.context.stroke();
   },
-    drawSpray: function(newX, newY){
-	this.context.strokeStyle = this.fillColor;
-    this.context.lineWidth = this.radius;
-	
-    this.context.beginPath();
-    this.context.moveTo(this.x, this.y);
-	this.context.arc(
-                        newX + Math.cos( Math.random() * Math.PI * 2 ) * radius * Math.random(),
-                        newY + Math.sin( Math.random() * Math.PI * 2 ) * radius * Math.random(),
-                        1,
-                        0, Math.PI * 2, false
-                    );
-    context.stroke();
+  
+   drawSpray: function(newX, newY){ 
+	this.context.fillStyle = this.fillColor; 
+	this.context.lineWidth = this.radius; 
 
-    this.x = newX;
-    this.y = newY;
-  },
+	this.context.beginPath(); 
+	this.context.moveTo(this.x, this.y); 
+	this.context.fillRect(newX, newY, 1, 1, 25); 
+
+	for (var i = 20; i--;) { 
+	this.context.fillRect(newX + Math.random() * 20 - 10, 
+	newY + Math.random() * 20 - 10, 1, 1, 25) ;} 
+	this.context.fill(); 
+
+	this.x = newX; 
+	this.y = newY; 
+},
   drawLine: function(endX, endY){
-    this.context.fillStyle = this.fillColor;
+    this.context.strokeStyle = this.fillColor;
     this.context.lineWidth = this.radius;
     this.context.lineCap = 'round';
 
     this.context.moveTo(this.x, this.y);
     this.context.lineTo(endX, endY);
+	this.context.fill();
   },
   erase: function(newX, newY){
     this.context.lineWidth = this.radius;
