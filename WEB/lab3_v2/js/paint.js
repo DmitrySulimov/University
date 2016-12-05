@@ -48,12 +48,13 @@ Brush.prototype = {
 
 	this.context.beginPath(); 
 	this.context.moveTo(this.x, this.y); 
-	this.context.fillRect(newX, newY, 1, 1, 25); 
+	this.context.fillRect(newX, newY, 1, 1, 50); 
 
-	for (var i = 20; i--;) { 
-	this.context.fillRect(newX + Math.random() * 20 - 10, 
-	newY + Math.random() * 20 - 10, 1, 1, 25) ;} 
-	this.context.fill(); 
+	for (var i = 4 * this.radius; i--;) { 
+		this.context.fillRect(newX + Math.random() * this.radius * 4 - (2 * this.radius), 
+						  newY + Math.random() * this.radius * 4 - (2 * this.radius), 1, 1, 120) ;
+						  	} 
+	this.context.fill();
 
 	this.x = newX; 
 	this.y = newY; 
