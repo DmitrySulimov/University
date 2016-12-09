@@ -1,121 +1,201 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using CompanyStructure.Model;
 
 namespace CompanyStructure
 {
     public class Menu
     {
-        
+        private readonly CompanyStructureBuilder companyBuilder = new CompanyStructureBuilder();
 
-        public static void StartDialog()
-
-        {
-            
-
-
-            var message = "\n";
-            while (true)
-            {
-                try
-                {
-                    bool result = ShowMenu(message);
-                    if (result)
-                    {
-                        return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    message = ex.Message + "\n";
-                }
-            }
-        }
-        public static bool ShowMenu(string message)
+        public void StartDialog()
         {
             while (true)
             {
                 Console.Clear();
-                Console.Write(message);
-                Console.WriteLine($"{new string('-', 60)}");
+                Console.WriteLine("Лабораторная работа №3 Сулимов Дмитрий");
 
-                Console.WriteLine(
-                      "\nChoose an action:"
-                    + "\n1. Add employee"
-                    + "\n2. Create Employee"
-                    + "\n3. Get Employee"
-                    + "\n4. Add supervisor"
-                    + "\n5. Get employee with salary"
-                    + "\n6. Get employee with supervizor"
-                    + "\n70. Exit");
+                Console.WriteLine("Выберите действие:" +
+                                  "\n1. Отобразить структуру компании" +
+                                  "\n2. Добавить новую должность" +
+                                  "\n3. Добавить нового сотрудника" +
+                                  "\n4. Получить сотрудника по идентификатору" +
+                                  "\n5. Получить сотрудников с зарплатой больше чем..." +
+                                  "\n6. Потучить сотрудников с заданым супервайзером");
 
-                int inputValue;
-                bool isInputSuccess = int.TryParse(Console.ReadLine(), out inputValue);
+                int result;
+                int.TryParse(Console.ReadLine(), out result);
 
-                if (!isInputSuccess)
-                    continue;
-
-                switch (inputValue)
+                switch (result)
                 {
                     case 1:
                         {
-                            
+                            ShowCompanyStructure();
                             break;
                         }
                     case 2:
                         {
-                            Max.TurnOff();
+                            Console.Write("Введите название должности: ");
+                            companyBuilder.AddPosition(Console.ReadLine());
                             break;
                         }
                     case 3:
                         {
-                            Console.Write("\n Set the numers of steps: ");
-                            s = Convert.ToInt16(Console.ReadLine());
+                            Console.Write("Введите имя сотрудника: ");
+                            string name = Console.ReadLine();
+
+                            Console.Write("Введите фамилию сотрудника: ");
+                            string surname = Console.ReadLine();
+
+                            Console.Write("Введите уникальй идентификатор сотрудника: ");
+                            string id = Console.ReadLine();
+
+                            if (companyBuilder.EmployeesList.Exists(p => p.Id == id))
+                            {
+                                Console.WriteLine("Неправильный идентификатор");
+                                break;
+                            }
+
+                            Console.Write("Введите оклад сотрудника: ");
+                            double salary;
+                            bool isSuccess = double.TryParse(Console.ReadLine(), out salary);
+                            if (!isSuccess)
+                            {
+                                Console.WriteLine("Неправильное число");
+                                break;
+                            }
+
+                            Console.Write("Введите должность сотрудника: ");
+                            string position = Console.ReadLine();
+                            if (!companyBuilder.Position.Contains(position))
+                            {
+                                Console.WriteLine("В компании нету такой должности");
+                                break;
+                            }
+
+                            Employee employee = new Employee(name, surname, id, position, salary);
+
+                            Console.Write("Введите идентификатор супервайзера (оставьте пустым, если не нужно назначать: ");
+                            string superviserId = Console.ReadLine();
+
+                            if (!string.IsNullOrWhiteSpace(superviserId))
+                            {
+                                Employee supervisor = companyBuilder.EmployeesList.FirstOrDefault(p => p.Id == superviserId);
+                                if (supervisor == null)
+                                {
+                                    Console.WriteLine("В компании нету сотрудника с таким идентификатором");
+                                }
+                                else
+                                {
+                                    companyBuilder.AddSupervisor(employee, supervisor);
+                                }
+                            }
+
+                            companyBuilder.AddEmployee(employee);
+                            Console.WriteLine("Сотрудник был успешно добавлен");
+
+
                             break;
                         }
                     case 4:
                         {
-                            Max.Move(s, Direction.Up);
+                            Console.Write("Введите идентификатор сотрудника: ");
+                            string id = Console.ReadLine();
+
+                            Employee employee = companyBuilder.EmployeesList.FirstOrDefault(p => p.Id == id);
+
+                            if (employee == null)
+                            {
+                                Console.WriteLine("Сотрудник с таким идентификатором не существует");
+                            }
+                            else
+                            {
+                                Console.WriteLine(employee.ToString());
+                            }
                             break;
                         }
                     case 5:
                         {
-                            Max.Move(s, Direction.Down);
+                            Console.Write("Введите оклад сотрудника: ");
+                            double salary;
+                            bool isSuccess = double.TryParse(Console.ReadLine(), out salary);
+                            if (!isSuccess)
+                            {
+                                Console.WriteLine("Неправильное число");
+                                break;
+                            }
+
+                            var employees = companyBuilder.GetEmployeeByWithMoreSalary(salary);
+                            foreach (var employee in employees)
+                            {
+                                Console.WriteLine(employee.ToString());
+                            }
                             break;
                         }
                     case 6:
                         {
-                            Max.Move(s, Direction.Left);
+                            Console.Write("Введите идентификатор сотрудника: ");
+                            string id = Console.ReadLine();
+
+                            Employee supervisor = companyBuilder.EmployeesList.FirstOrDefault(p => p.Id == id);
+
+                            if (supervisor == null)
+                            {
+                                Console.WriteLine("Сотрудник с таким идентификатором не существует");
+                            }
+                            else
+                            {
+                                var employees = companyBuilder.GetEmployeeBySupervisor(supervisor);
+                                foreach (var employee in employees)
+                                {
+                                    Console.WriteLine(employee.ToString());
+                                }
+                            }
+
                             break;
-                        }
-                    case 7:
-                        {
-                            Max.Move(s, Direction.Right);
-                            break;
-                        }
-                    case 8:
-                        {
-                            Max.lastMove();
-                            Console.ReadLine();
-                            break;
-                        }
-                    case 9:
-                        {
-                            Max.moveInSide();
-                            Console.ReadLine();
-                            break;
-                        }
-                    case 10:
-                        {
-                            return true;
                         }
                     default:
                         {
-                            continue;
+                            Console.WriteLine("Неправильный ввод");
+                            break;
                         }
                 }
+
+                Console.WriteLine("\nНажмите любую клавишу чтобы продолжить...");
+                Console.ReadKey();
+            }
+        }
+
+        private void ShowCompanyStructure()
+        {
+            Console.WriteLine("Выбирете вариант отображения: " +
+                              "\n1. По прямому подчинению" +
+                              "\n2. По высоте позиции в компании");
+
+            int result;
+            int.TryParse(Console.ReadLine(), out result);
+
+            switch (result)
+            {
+                case 1:
+                    {
+                        string output = companyBuilder.GetCompanyStructure(StructureFormat.OnDirectSubmission);
+                        Console.WriteLine(output);
+                        break;
+                    }
+                case 2:
+                    {
+                        string output = companyBuilder.GetCompanyStructure(StructureFormat.OnHeightPosition);
+                        Console.WriteLine(output);
+                        break;
+                    }
+
+                default:
+                    {
+                        Console.WriteLine("Неправильный ввод");
+                        break;
+                    }
             }
         }
     }

@@ -1,1 +1,11 @@
 c:\users\димас\documents\visual studio 2015\Projects\CompanyStructure\CompanyStructure\obj\Debug\CompanyStructure.csprojResolveAssemblyReference.cache
+C:\Users\User\Downloads\University-master\Object oriented programming\lab_3\CompanyStructure\bin\Debug\CompanyStructure.pdb
+C:\Users\User\Downloads\University-master\Object oriented programming\lab_3\CompanyStructure\obj\Debug\CompanyStructure.csprojResolveAssemblyReference.cache
+C:\Users\User\Downloads\University-master\Object oriented programming\lab_3\CompanyStructure\obj\Debug\CompanyStructure.pdb
+C:\Users\User\Downloads\University-master\Object oriented programming\lab_3\CompanyStructure\bin\Debug\CompanyStructure.exe
+C:\Users\User\Downloads\University-master\Object oriented programming\lab_3\CompanyStructure\obj\Debug\CompanyStructure.exe
+D:\ДНУ\Object oriented programming\lab_3\CompanyStructure\obj\Debug\CompanyStructure.exe
+D:\ДНУ\Object oriented programming\lab_3\CompanyStructure\obj\Debug\CompanyStructure.pdb
+D:\ДНУ\Object oriented programming\lab_3\CompanyStructure\bin\Debug\CompanyStructure.exe
+D:\ДНУ\Object oriented programming\lab_3\CompanyStructure\bin\Debug\CompanyStructure.pdb
+D:\ДНУ\Object oriented programming\lab_3\CompanyStructure\obj\Debug\CompanyStructure.csprojResolveAssemblyReference.cache
