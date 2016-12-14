@@ -1,0 +1,8 @@
+D:\Visual Studio Projects\OSLab22\OSLab22\bin\Debug\OSLab22.exe.config
+D:\Visual Studio Projects\OSLab22\OSLab22\bin\Debug\OSLab22.exe
+D:\Visual Studio Projects\OSLab22\OSLab22\bin\Debug\OSLab22.pdb
+D:\Visual Studio Projects\OSLab22\OSLab22\obj\Debug\OSLab22.csprojResolveAssemblyReference.cache
+D:\Visual Studio Projects\OSLab22\OSLab22\obj\Debug\OSLab22.Properties.Resources.resources
+D:\Visual Studio Projects\OSLab22\OSLab22\obj\Debug\OSLab22.csproj.GenerateResource.Cache
+D:\Visual Studio Projects\OSLab22\OSLab22\obj\Debug\OSLab22.exe
+D:\Visual Studio Projects\OSLab22\OSLab22\obj\Debug\OSLab22.pdb
