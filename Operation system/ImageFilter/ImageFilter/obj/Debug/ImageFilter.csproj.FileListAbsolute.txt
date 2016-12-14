@@ -1,0 +1,12 @@
+c:\users\димас\documents\visual studio 2015\Projects\ImageFilter\ImageFilter\bin\Debug\ImageFilter.exe.config
+c:\users\димас\documents\visual studio 2015\Projects\ImageFilter\ImageFilter\bin\Debug\ImageFilter.exe
+c:\users\димас\documents\visual studio 2015\Projects\ImageFilter\ImageFilter\bin\Debug\ImageFilter.pdb
+c:\users\димас\documents\visual studio 2015\Projects\ImageFilter\ImageFilter\obj\Debug\ImageFilter.csprojResolveAssemblyReference.cache
+c:\users\димас\documents\visual studio 2015\Projects\ImageFilter\ImageFilter\obj\Debug\ImageFilter.exe
+c:\users\димас\documents\visual studio 2015\Projects\ImageFilter\ImageFilter\obj\Debug\ImageFilter.pdb
+D:\ДНУ\Operation system\ImageFilter\ImageFilter\bin\Debug\ImageFilter.exe.config
+D:\ДНУ\Operation system\ImageFilter\ImageFilter\obj\Debug\ImageFilter.exe
+D:\ДНУ\Operation system\ImageFilter\ImageFilter\obj\Debug\ImageFilter.pdb
+D:\ДНУ\Operation system\ImageFilter\ImageFilter\bin\Debug\ImageFilter.exe
+D:\ДНУ\Operation system\ImageFilter\ImageFilter\bin\Debug\ImageFilter.pdb
+D:\ДНУ\Operation system\ImageFilter\ImageFilter\obj\Debug\ImageFilter.csprojResolveAssemblyReference.cache
